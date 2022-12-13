@@ -1,4 +1,6 @@
 import express, { Application, NextFunction, Request, Response } from "express";
+import * as dotenv from "dotenv";
+dotenv.config();
 import { Server } from "http";
 import connect from "./config/db";
 import appRoute from "./routes";
@@ -20,6 +22,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 appRoute(app);
 
-const server: Server = app.listen("https://themovie-api.onrender.com/", () => {
-  console.log("listening on 5000");
+const server: Server = app.listen(process.env.PORT || 5000, () => {
+  console.log("listening on " + process.env.PORT || 5000);
 });
