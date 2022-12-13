@@ -48,6 +48,6 @@ app.use(express_1.default.urlencoded({ extended: true }));
 // }));
 app.use(express_1.default.json());
 (0, routes_1.default)(app);
-const server = app.listen(process.env.PORT, () => {
-    console.log("listening on " + process.env.PORT);
+const server = app.listen(process.env.PORT || 5000, () => {
+    console.log("listening on " + process.env.PORT || 5000);
 });
