@@ -35,7 +35,7 @@ var cookieParser = require("cookie-parser");
 var cors = require("cors");
 const app = (0, express_1.default)();
 const corsOptions = {
-    origin: "https://themovie.onrender.com/",
+    origin: "https://themovie.onrender.com",
     optionsSuccessStatus: 200,
     credentials: true,
 };
