@@ -19,6 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 // }));
 app.use(express.json());
 appRoute(app);
-const server: Server = app.listen(5000, () => {
-  console.log("listening on 5000");
-});
+
+// const server: Server = app.listen(5000, () => {
+//   console.log("listening on 5000");
+// });
