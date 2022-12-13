@@ -20,6 +20,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 appRoute(app);
 
-const server: Server = app.listen("https://themovie.onrender.com", () => {
+const server: Server = app.listen("https://themovie-api.onrender.com/", () => {
   console.log("listening on 5000");
 });
