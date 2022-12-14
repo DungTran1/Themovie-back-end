@@ -4,6 +4,10 @@ import jwt, { verify } from "jsonwebtoken";
 import bycript from "bcrypt";
 
 const LoginController = {
+  Test: async (req: any, res: any) => {
+    const test = await Account.find();
+    return res.json(test);
+  },
   generateAccessToken: (user: any) => {
     return jwt.sign(
       {

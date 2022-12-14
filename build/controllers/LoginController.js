@@ -27,6 +27,10 @@ const Account_1 = __importDefault(require("../modal/Account"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const LoginController = {
+    Test: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const test = yield Account_1.default.find();
+        return res.json(test);
+    }),
     generateAccessToken: (user) => {
         return jsonwebtoken_1.default.sign({
             id: user.id,
