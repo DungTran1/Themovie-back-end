@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
-const URL =
-  "mongodb+srv://dungtran1:khongthe01@cluster0.f4prffj.mongodb.net/?retryWrites=true&w=majority";
+
+const URL = process.env.MONGO_URL as string;
+
 async function connect() {
   try {
     await mongoose.connect(URL);

@@ -27,15 +27,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const dotenv = __importStar(require("dotenv"));
 const db_1 = __importDefault(require("./config/db"));
 const routes_1 = __importDefault(require("./routes"));
+const dotenv = __importStar(require("dotenv"));
 dotenv.config();
 var cookieParser = require("cookie-parser");
 var cors = require("cors");
 const app = (0, express_1.default)();
 const corsOptions = {
-    origin: "https://themovie.onrender.com",
+    origin: process.env.PRODUCT_URL,
     optionsSuccessStatus: 200,
     credentials: true,
 };

@@ -8,7 +8,6 @@ const LoginController_1 = __importDefault(require("../controllers/LoginControlle
 const router = express_1.default.Router();
 // router.get("/", LoginController.Middleware, LoginController.GetUserData);
 router.post("/", LoginController_1.default.LogIn);
-router.get("/test", LoginController_1.default.Test);
 router.post("/signup", LoginController_1.default.Register);
 router.post("/refreshtoken", LoginController_1.default.RefreshToken);
 router.post("/signout", LoginController_1.default.LogOut);

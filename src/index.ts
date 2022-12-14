@@ -1,14 +1,14 @@
 import express, { Application, NextFunction, Request, Response } from "express";
-import * as dotenv from "dotenv";
 import { Server } from "http";
 import connect from "./config/db";
 import appRoute from "./routes";
+import * as dotenv from "dotenv";
 dotenv.config();
 var cookieParser = require("cookie-parser");
 var cors = require("cors");
 const app: Application = express();
 const corsOptions = {
-  origin: "https://themovie.onrender.com",
+  origin: process.env.PRODUCT_URL,
   optionsSuccessStatus: 200,
   credentials: true,
 };
