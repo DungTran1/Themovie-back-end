@@ -1,9 +1,9 @@
 import express, { Application, NextFunction, Request, Response } from "express";
 import * as dotenv from "dotenv";
-dotenv.config();
 import { Server } from "http";
 import connect from "./config/db";
 import appRoute from "./routes";
+dotenv.config();
 var cookieParser = require("cookie-parser");
 var cors = require("cors");
 const app: Application = express();
@@ -23,5 +23,5 @@ app.use(express.json());
 appRoute(app);
 
 const server: Server = app.listen(process.env.PORT || 5000, () => {
-  console.log("listening on " + process.env.PORT || 5000);
+  console.log("Start on " + process.env.PORT || 5000);
 });

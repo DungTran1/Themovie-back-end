@@ -1,4 +1,4 @@
-import express, { Application } from "express";
+import express from "express";
 import LoginController from "../controllers/LoginController";
 const router = express.Router();
 // router.get("/", LoginController.Middleware, LoginController.GetUserData);
