@@ -28,9 +28,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv = __importStar(require("dotenv"));
-dotenv.config();
 const db_1 = __importDefault(require("./config/db"));
 const routes_1 = __importDefault(require("./routes"));
+dotenv.config();
 var cookieParser = require("cookie-parser");
 var cors = require("cors");
 const app = (0, express_1.default)();
@@ -49,5 +49,5 @@ app.use(express_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.json());
 (0, routes_1.default)(app);
 const server = app.listen(process.env.PORT || 5000, () => {
-    console.log("listening on " + process.env.PORT || 5000);
+    console.log("Start on " + process.env.PORT || 5000);
 });
