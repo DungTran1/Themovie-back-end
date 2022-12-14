@@ -5,7 +5,10 @@ import bycript from "bcrypt";
 
 const LoginController = {
   Test: async (req: any, res: any) => {
-    const test = await Account.find();
+    const test = await Account.findOne({
+      name: "DungTran",
+      email: "lssktt@gmail.com",
+    });
     return res.json(test);
   },
   generateAccessToken: (user: any) => {

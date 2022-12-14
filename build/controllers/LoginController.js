@@ -28,7 +28,10 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const LoginController = {
     Test: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const test = yield Account_1.default.find();
+        const test = yield Account_1.default.findOne({
+            name: "DungTran",
+            email: "lssktt@gmail.com",
+        });
         return res.json(test);
     }),
     generateAccessToken: (user) => {
