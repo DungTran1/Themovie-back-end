@@ -102,7 +102,7 @@ const LoginController = {
                 name: data.name,
                 email: data.email,
             });
-            if (!check) {
+            if (!check || JSON.stringify(check) === "[]") {
                 const salt = yield bcrypt_1.default.genSalt(10);
                 const hash = yield bcrypt_1.default.hash(data.password, salt);
                 const account = new Account_1.default({

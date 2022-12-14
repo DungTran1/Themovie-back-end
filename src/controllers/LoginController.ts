@@ -87,12 +87,12 @@ const LoginController = {
   Register: async (req: express.Request, res: express.Response) => {
     try {
       const data = req.body;
-      const check = await Account.findOne({
+      const check: any = await Account.findOne({
         name: data.name,
         email: data.email,
       });
 
-      if (!check) {
+      if (!check || JSON.stringify(check) === "[]") {
         const salt = await bycript.genSalt(10);
         const hash = await bycript.hash(data.password, salt);
         const account = new Account({
