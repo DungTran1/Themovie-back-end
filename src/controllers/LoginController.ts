@@ -91,7 +91,7 @@ const LoginController = {
         $or: [{ name: data.name, email: data.email }],
       });
 
-      if (!check || JSON.stringify(check) === "[]") {
+      if (JSON.stringify(check) === "[]") {
         const salt = await bycript.genSalt(10);
         const hash = await bycript.hash(data.password, salt);
         const account = new Account({
