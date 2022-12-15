@@ -88,8 +88,7 @@ const LoginController = {
     try {
       const data = req.body;
       const check = await Account.findOne({
-        name: data.name,
-        email: data.email,
+        $and: [{ name: data.name, email: data.email }],
       });
 
       if (!check) {
@@ -102,10 +101,10 @@ const LoginController = {
           address: "",
           birthday: "",
         });
-        account.save();
+        await account.save();
         return res.send({ path: "/" });
       }
-      res.send({ path: "Tai khoan da ton tai" ,check});
+      res.send({ path: "Tai khoan da ton tai", check });
     } catch (error) {}
   },
   LogOut: async (req: express.Request, res: express.Response) => {

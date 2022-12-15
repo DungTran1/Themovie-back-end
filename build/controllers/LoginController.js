@@ -99,8 +99,7 @@ const LoginController = {
         try {
             const data = req.body;
             const check = yield Account_1.default.findOne({
-                name: data.name,
-                email: data.email,
+                $and: [{ name: data.name, email: data.email }],
             });
             if (!check) {
                 const salt = yield bcrypt_1.default.genSalt(10);
@@ -112,7 +111,7 @@ const LoginController = {
                     address: "",
                     birthday: "",
                 });
-                account.save();
+                yield account.save();
                 return res.send({ path: "/" });
             }
             res.send({ path: "Tai khoan da ton tai", check });
