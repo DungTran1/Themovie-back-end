@@ -111,7 +111,8 @@ const LoginController = {
                     photoUrl: data.photoUrl || "",
                 });
                 yield account.save();
-                return res.send({ path: "/" });
+                const _b = account._doc, { password } = _b, others = __rest(_b, ["password"]);
+                return res.send({ path: "/", user: Object.assign({}, others) });
             }
             res.send({ path: "Tai khoan da ton tai" });
         }

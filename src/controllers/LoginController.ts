@@ -99,9 +99,10 @@ const LoginController = {
           password: hash,
           email: data.email,
           photoUrl: data.photoUrl || "",
-        });
+        }) as any;
         await account.save();
-        return res.send({ path: "/" });
+        const { password, ...others } = account._doc;
+        return res.send({ path: "/", user: { ...others } });
       }
       res.send({ path: "Tai khoan da ton tai" });
     } catch (error) {}
