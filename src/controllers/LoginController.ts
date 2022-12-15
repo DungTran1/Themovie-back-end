@@ -88,7 +88,7 @@ const LoginController = {
     try {
       const data = req.body;
       const check = await Account.findOne({
-        $and: [{ name: data.name, email: data.email }],
+        $or: [{ name: data.name, email: data.email }],
       });
 
       if (!check) {

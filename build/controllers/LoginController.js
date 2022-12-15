@@ -99,7 +99,7 @@ const LoginController = {
         try {
             const data = req.body;
             const check = yield Account_1.default.findOne({
-                $and: [{ name: data.name, email: data.email }],
+                $or: [{ name: data.name, email: data.email }],
             });
             if (!check) {
                 const salt = yield bcrypt_1.default.genSalt(10);
