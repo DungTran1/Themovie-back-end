@@ -105,7 +105,7 @@ const LoginController = {
         account.save();
         return res.send({ path: "/" });
       }
-      res.send({ path: "Tai khoan da ton tai" });
+      res.send({ path: "Tai khoan da ton tai" ,check});
     } catch (error) {}
   },
   LogOut: async (req: express.Request, res: express.Response) => {
