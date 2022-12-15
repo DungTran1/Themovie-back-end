@@ -104,15 +104,23 @@ const LoginController = {
             if (!check) {
                 const salt = yield bcrypt_1.default.genSalt(10);
                 const hash = yield bcrypt_1.default.hash(data.password, salt);
-                const account = new Account_1.default({
+                const user = new Account_1.default({
                     name: data.name,
                     password: hash,
                     email: data.email,
                     photoUrl: data.photoUrl || "",
                 });
-                yield account.save();
-                const _b = account._doc, { password } = _b, others = __rest(_b, ["password"]);
-                return res.send({ path: "/", user: Object.assign({}, others) });
+                yield user.save();
+                const accessToken = LoginController.generateAccessToken(user);
+                const refreshToken = LoginController.generateRefreshToken(user);
+                const _b = user._doc, { password } = _b, others = __rest(_b, ["password"]);
+                res.cookie("refreshToken", refreshToken, {
+                    httpOnly: true,
+                    secure: false,
+                    path: "/",
+                    sameSite: "strict",
+                });
+                return res.send({ path: "/", user: Object.assign(Object.assign({}, others), { accessToken }) });
             }
             res.send({ path: "Tai khoan da ton tai" });
         }

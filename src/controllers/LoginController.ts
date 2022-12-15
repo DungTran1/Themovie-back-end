@@ -94,15 +94,23 @@ const LoginController = {
       if (!check) {
         const salt = await bycript.genSalt(10);
         const hash = await bycript.hash(data.password, salt);
-        const account = new Account({
+        const user = new Account({
           name: data.name,
           password: hash,
           email: data.email,
           photoUrl: data.photoUrl || "",
         }) as any;
-        await account.save();
-        const { password, ...others } = account._doc;
-        return res.send({ path: "/", user: { ...others } });
+        await user.save();
+        const accessToken = LoginController.generateAccessToken(user);
+        const refreshToken = LoginController.generateRefreshToken(user);
+        const { password, ...others } = user._doc;
+        res.cookie("refreshToken", refreshToken, {
+          httpOnly: true,
+          secure: false,
+          path: "/",
+          sameSite: "strict",
+        });
+        return res.send({ path: "/", user: { ...others, accessToken } });
       }
       res.send({ path: "Tai khoan da ton tai" });
     } catch (error) {}
