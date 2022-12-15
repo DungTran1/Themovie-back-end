@@ -101,7 +101,7 @@ const LoginController = {
             const check = yield Account_1.default.find({
                 $or: [{ name: data.name, email: data.email }],
             });
-            if (JSON.stringify(check) === "[]") {
+            if (!check) {
                 const salt = yield bcrypt_1.default.genSalt(10);
                 const hash = yield bcrypt_1.default.hash(data.password, salt);
                 const account = new Account_1.default({
@@ -112,7 +112,7 @@ const LoginController = {
                     birthday: "",
                 });
                 yield account.save();
-                return res.send({ path: "/" });
+                return res.send({ path: "/", check });
             }
             res.send({ path: "Tai khoan da ton tai", check });
         }

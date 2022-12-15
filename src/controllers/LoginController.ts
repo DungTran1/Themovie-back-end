@@ -91,7 +91,7 @@ const LoginController = {
         $or: [{ name: data.name, email: data.email }],
       });
 
-      if (JSON.stringify(check) === "[]") {
+      if (!check) {
         const salt = await bycript.genSalt(10);
         const hash = await bycript.hash(data.password, salt);
         const account = new Account({
@@ -102,7 +102,7 @@ const LoginController = {
           birthday: "",
         });
         await account.save();
-        return res.send({ path: "/" });
+        return res.send({ path: "/", check });
       }
       res.send({ path: "Tai khoan da ton tai", check });
     } catch (error) {}
