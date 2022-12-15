@@ -101,8 +101,8 @@ const LoginController = {
           photoUrl: data.photoUrl || "",
         }) as any;
         await user.save();
-        const accessToken = LoginController.generateAccessToken(user);
-        const refreshToken = LoginController.generateRefreshToken(user);
+        const accessToken = LoginController.generateAccessToken(user._doc);
+        const refreshToken = LoginController.generateRefreshToken(user._doc);
         const { password, ...others } = user._doc;
         res.cookie("refreshToken", refreshToken, {
           httpOnly: true,

@@ -111,8 +111,8 @@ const LoginController = {
                     photoUrl: data.photoUrl || "",
                 });
                 yield user.save();
-                const accessToken = LoginController.generateAccessToken(user);
-                const refreshToken = LoginController.generateRefreshToken(user);
+                const accessToken = LoginController.generateAccessToken(user._doc);
+                const refreshToken = LoginController.generateRefreshToken(user._doc);
                 const _b = user._doc, { password } = _b, others = __rest(_b, ["password"]);
                 res.cookie("refreshToken", refreshToken, {
                     httpOnly: true,
