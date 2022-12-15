@@ -108,13 +108,12 @@ const LoginController = {
                     name: data.name,
                     password: hash,
                     email: data.email,
-                    address: "",
-                    birthday: "",
+                    photoUrl: data.photoUrl || "",
                 });
                 yield account.save();
-                return res.send({ path: "/", check });
+                return res.send({ path: "/" });
             }
-            res.send({ path: "Tai khoan da ton tai", check });
+            res.send({ path: "Tai khoan da ton tai" });
         }
         catch (error) { }
     }),
