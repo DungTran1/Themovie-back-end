@@ -98,10 +98,10 @@ const LoginController = {
     Register: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const data = req.body;
-            const check = yield Account_1.default.findOne({
+            const check = yield Account_1.default.find({
                 $or: [{ name: data.name, email: data.email }],
             });
-            if (!check) {
+            if (JSON.stringify(check) !== "[]") {
                 const salt = yield bcrypt_1.default.genSalt(10);
                 const hash = yield bcrypt_1.default.hash(data.password, salt);
                 const account = new Account_1.default({
