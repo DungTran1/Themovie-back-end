@@ -35,7 +35,7 @@ var cookieParser = require("cookie-parser");
 var cors = require("cors");
 const app = (0, express_1.default)();
 const corsOptions = {
-    origin: process.env.PRODUCT_URL || "https://themovie.onrender.com",
+    origin: "https://themovie.onrender.com",
     optionsSuccessStatus: 200,
     credentials: true,
 };
@@ -45,6 +45,6 @@ app.use(cookieParser());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.json());
 (0, routes_1.default)(app);
-const server = app.listen(5000, () => {
-    console.log("Start on " + 5000);
+const server = app.listen(process.env.PORT, () => {
+    console.log("Start on " + process.env.PORT);
 });
