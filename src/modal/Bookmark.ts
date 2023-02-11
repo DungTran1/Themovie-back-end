@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const BookmarkSchema = new Schema(
   {
     movieIds: { type: Array, required: true },
-    userId: { type: String, required: true },
+    uid: { type: String, required: true },
   },
   { timestamps: true }
 );

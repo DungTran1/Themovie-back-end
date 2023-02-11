@@ -3,8 +3,10 @@ import CommentController from "../controllers/CommentController";
 
 const router = express.Router();
 
-router.post("/:id", CommentController.saveComment);
+router.post("/add/:id", CommentController.addComment);
 router.post("/reaction/:id", CommentController.saveReaction);
 router.post("/", CommentController.getComment);
-router.post("/delete/movie", CommentController.deleteComment);
+router.post("/remove", CommentController.removeComment);
+router.post("/edit", CommentController.editComment);
+
 export default router;

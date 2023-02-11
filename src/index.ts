@@ -1,4 +1,4 @@
-import express, { Application, NextFunction, Request, Response } from "express";
+import express, { Application } from "express";
 import { Server } from "http";
 import connect from "./config/db";
 import appRoute from "./routes";
@@ -16,9 +16,7 @@ connect();
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-// app.use(bodyParser.urlencoded({
-//   extended: true
-// }));
+
 app.use(express.json());
 appRoute(app);
 

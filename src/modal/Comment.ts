@@ -5,10 +5,19 @@ const Schema = mongoose.Schema;
 const CommentSchema = new Schema(
   {
     movieId: { type: Number, required: true },
-    userId: { type: String, required: true },
+    uid: { type: String, required: true },
+    displayName: { type: String, required: true },
+    photoURL: { type: String, default: "" },
     content: { type: String, default: "" },
-    reaction: { type: Array<Object>, default: [] },
-    reply: { type: String, default: null },
+    comments: { type: String, default: null },
+    reaction: {
+      type: Array<{
+        displayName: String;
+        photoURL: String;
+        type: String;
+        uid: String;
+      }>,
+    },
   },
   { timestamps: true }
 );

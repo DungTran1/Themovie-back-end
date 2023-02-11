@@ -1,11 +1,9 @@
 import Comment from "../modal/Comment";
 import express from "express";
-import jwt, { verify } from "jsonwebtoken";
-import bycript from "bcrypt";
-import Account from "../modal/Account";
+
 interface IComment {
   movieId: number;
-  userId: string;
+  uid: string;
   content: string;
   reaction: Array<object>;
   reply: string;
@@ -19,87 +17,110 @@ interface IUser {
   photoUrl: string;
 }
 const CommentController = {
-  saveComment: async (req: express.Request, res: express.Response) => {
+  addComment: async (req: express.Request, res: express.Response) => {
     try {
       const movieId = Number(req.params.id as string);
-      const userId = req.body.userId;
+      const uid = req.body.uid;
       const content = req.body.content;
-      const reply = req.body.reply;
-
-      const newComment: any = new Comment({ movieId, userId, content, reply });
-      newComment.save();
-      const user: IUser | null = await Account.findById(userId);
-
-      return res.json({
-        comment: {
-          ...newComment._doc,
-
-          photoUrl: user?.photoUrl,
-          name: user?.name,
-        },
+      const comments = req.body.comments;
+      const displayName = req.body.displayName;
+      const photoURL = req.body.photoURL;
+      const newComment = new Comment({
+        movieId,
+        uid,
+        displayName,
+        content,
+        comments,
+        photoURL,
       });
+      await newComment.save();
+      const findComemnt = await Comment.findOne(
+        {},
+        {},
+        { sort: { createdAt: -1 } }
+      );
+      return res.json({
+        comment: findComemnt,
+      });
+    } catch (error) {
+      console.log(error);
+      res.send(error);
+    }
+  },
+
+  getComment: async (req: express.Request, res: express.Response) => {
+    try {
+      const movieId = req.body.movieId;
+      const comment = (await Comment.find({ movieId }).sort({
+        createdAt: -1,
+      })) as any;
+      if (JSON.stringify(comment) === "[]") {
+        return res.status(200).json(null);
+      }
+      return res.status(200).json({ comment: comment });
     } catch (error) {
       console.log(error);
     }
   },
-  getComment: async (req: express.Request, res: express.Response) => {
-    const movieId = req.body.movieId;
-    const comment = await Comment.find({ movieId }).sort({
-      createdAt: -1,
-    });
-
-    Promise.all(
-      comment.map(async (item: any) => {
-        const user = await Account.findById(item.userId);
-        return { ...item._doc, photoUrl: user?.photoUrl, name: user?.name };
-      })
-    )
-      .then((newComment) => {
-        return res.json({ comment: newComment });
-      })
-      .catch((e) => console.log(e));
+  editComment: async (req: express.Request, res: express.Response) => {
+    try {
+      const edit = await Comment.findByIdAndUpdate(req.body._id, {
+        content: req.body.content,
+      });
+      if (edit) {
+        res.send(true);
+      }
+    } catch (error) {}
   },
-  deleteComment: async (req: express.Request, res: express.Response) => {},
+  removeComment: async (req: express.Request, res: express.Response) => {
+    try {
+      const _id = req.body._id;
+      const remove = await Comment.findByIdAndDelete(_id);
+      console.log(remove);
+      if (remove) {
+        return res.send(true);
+      }
+      return res.send(false);
+    } catch (error) {
+      console.log(error);
+    }
+  },
   saveReaction: async (req: express.Request, res: express.Response) => {
     try {
-      const movieId = Number(req.params.id);
-      const userId = req.body.userId;
+      const uid = req.body.uid;
       const commentId = req.body.commentId;
-      const reactionType = req.body.reactionType;
+      const displayName = req.body.displayName;
+      const photoURL = req.body.photoURL;
+      const type = req.body.type;
       const react: IComment = (await Comment.findOne({
         _id: commentId,
       })) as any;
-      console.log(react, reactionType);
-      if (react.reaction.length < 1) {
+      const userReacted = react.reaction.find((e: any) => e.uid === uid);
+      console.log(userReacted, type);
+      if (userReacted) {
+        const typeReacted = react.reaction.find(
+          (e: any) => e.type === type && e.uid === uid
+        );
+        if (typeReacted) {
+          Comment.updateOne(
+            { _id: commentId },
+            { $pull: { reaction: { uid } } }
+          )
+            .then(() => res.send(true))
+            .catch((e) => console.log(e));
+        } else {
+          Comment.updateOne(
+            { _id: commentId, "reaction.uid": uid },
+            { $set: { "reaction.$.type": type } }
+          )
+            .then(() => res.send(true))
+            .catch((e) => console.log(e));
+        }
+      } else {
         Comment.updateOne(
           { _id: commentId },
-          { $push: { reaction: { userId, reactionType } } }
-        ).then((res) => console.log(res));
-      } else {
-        react.reaction.forEach((e: any) => {
-          if (e.userId === userId) {
-            if (e.reactionType === reactionType) {
-              Comment.updateOne(
-                { _id: commentId },
-                { $pull: { reaction: { userId } } }
-              )
-                .then((res) => console.log(res))
-                .catch((e) => console.log(e));
-            } else {
-              Comment.updateOne(
-                { _id: commentId, "reaction.userId": userId },
-                { $set: { "reaction.$.reactionType": reactionType } }
-              )
-                .then((res) => console.log(res))
-                .catch((e) => console.log(e));
-            }
-          } else {
-            Comment.updateOne(
-              { _id: commentId },
-              { $push: { reaction: { userId, reactionType } } }
-            ).then((res) => console.log(res));
-          }
-        });
+          { $push: { reaction: { uid, type, displayName, photoURL } } }
+        ).then(() => res.send(true));
       }
     } catch (error) {
       console.log(error);
