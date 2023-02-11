@@ -12,6 +12,12 @@ const BookmarkController = {
           (movie) => movie.movieId === movieId
         );
         if (!isWatched) {
+          await Bookmark.updateOne(
+            { uid },
+            {
+              $push: { movieIds: { movieId, media } },
+            }
+          );
           return res.status(200).send("update nothing!");
         } else {
           await Bookmark.updateOne(
