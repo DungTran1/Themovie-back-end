@@ -7,7 +7,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const Schema = mongoose_1.default.Schema;
 const HistorySchema = new Schema({
     movieIds: { type: Array, required: true },
-    userId: { type: String, required: true },
+    uid: { type: String, required: true },
 }, { timestamps: true });
 const History = mongoose_1.default.model("histories", HistorySchema);
 exports.default = History;

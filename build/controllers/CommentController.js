@@ -13,71 +13,101 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Comment_1 = __importDefault(require("../modal/Comment"));
-const Account_1 = __importDefault(require("../modal/Account"));
 const CommentController = {
-    saveComment: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    addComment: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const movieId = Number(req.params.id);
-            const userId = req.body.userId;
+            const uid = req.body.uid;
             const content = req.body.content;
-            const reply = req.body.reply;
-            const newComment = new Comment_1.default({ movieId, userId, content, reply });
-            newComment.save();
-            const user = yield Account_1.default.findById(userId);
-            return res.json({
-                comment: Object.assign(Object.assign({}, newComment._doc), { photoUrl: user === null || user === void 0 ? void 0 : user.photoUrl, name: user === null || user === void 0 ? void 0 : user.name }),
+            const comments = req.body.comments;
+            const displayName = req.body.displayName;
+            const photoURL = req.body.photoURL;
+            const newComment = new Comment_1.default({
+                movieId,
+                uid,
+                displayName,
+                content,
+                comments,
+                photoURL,
             });
+            yield newComment.save();
+            const findComemnt = yield Comment_1.default.findOne({}, {}, { sort: { createdAt: -1 } });
+            return res.json({
+                comment: findComemnt,
+            });
+        }
+        catch (error) {
+            console.log(error);
+            res.send(error);
+        }
+    }),
+    getComment: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const movieId = req.body.movieId;
+            const comment = (yield Comment_1.default.find({ movieId }).sort({
+                createdAt: -1,
+            }));
+            if (JSON.stringify(comment) === "[]") {
+                return res.status(200).json(null);
+            }
+            return res.status(200).json({ comment: comment });
         }
         catch (error) {
             console.log(error);
         }
     }),
-    getComment: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const movieId = req.body.movieId;
-        const comment = yield Comment_1.default.find({ movieId }).sort({
-            createdAt: -1,
-        });
-        Promise.all(comment.map((item) => __awaiter(void 0, void 0, void 0, function* () {
-            const user = yield Account_1.default.findById(item.userId);
-            return Object.assign(Object.assign({}, item._doc), { photoUrl: user === null || user === void 0 ? void 0 : user.photoUrl, name: user === null || user === void 0 ? void 0 : user.name });
-        })))
-            .then((newComment) => {
-            return res.json({ comment: newComment });
-        })
-            .catch((e) => console.log(e));
+    editComment: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const edit = yield Comment_1.default.findByIdAndUpdate(req.body._id, {
+                content: req.body.content,
+            });
+            if (edit) {
+                res.send(true);
+            }
+        }
+        catch (error) { }
     }),
-    deleteComment: (req, res) => __awaiter(void 0, void 0, void 0, function* () { }),
+    removeComment: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const _id = req.body._id;
+            const remove = yield Comment_1.default.findByIdAndDelete(_id);
+            console.log(remove);
+            if (remove) {
+                return res.send(true);
+            }
+            return res.send(false);
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }),
     saveReaction: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const movieId = Number(req.params.id);
-            const userId = req.body.userId;
+            const uid = req.body.uid;
             const commentId = req.body.commentId;
-            const reactionType = req.body.reactionType;
+            const displayName = req.body.displayName;
+            const photoURL = req.body.photoURL;
+            const type = req.body.type;
             const react = (yield Comment_1.default.findOne({
                 _id: commentId,
             }));
-            console.log(react, reactionType);
-            if (react.reaction.length < 1) {
-                Comment_1.default.updateOne({ _id: commentId }, { $push: { reaction: { userId, reactionType } } }).then((res) => console.log(res));
+            const userReacted = react.reaction.find((e) => e.uid === uid);
+            console.log(userReacted, type);
+            if (userReacted) {
+                const typeReacted = react.reaction.find((e) => e.type === type && e.uid === uid);
+                if (typeReacted) {
+                    Comment_1.default.updateOne({ _id: commentId }, { $pull: { reaction: { uid } } })
+                        .then(() => res.send(true))
+                        .catch((e) => console.log(e));
+                }
+                else {
+                    Comment_1.default.updateOne({ _id: commentId, "reaction.uid": uid }, { $set: { "reaction.$.type": type } })
+                        .then(() => res.send(true))
+                        .catch((e) => console.log(e));
+                }
             }
             else {
-                react.reaction.forEach((e) => {
-                    if (e.userId === userId) {
-                        if (e.reactionType === reactionType) {
-                            Comment_1.default.updateOne({ _id: commentId }, { $pull: { reaction: { userId } } })
-                                .then((res) => console.log(res))
-                                .catch((e) => console.log(e));
-                        }
-                        else {
-                            Comment_1.default.updateOne({ _id: commentId, "reaction.userId": userId }, { $set: { "reaction.$.reactionType": reactionType } })
-                                .then((res) => console.log(res))
-                                .catch((e) => console.log(e));
-                        }
-                    }
-                    else {
-                        Comment_1.default.updateOne({ _id: commentId }, { $push: { reaction: { userId, reactionType } } }).then((res) => console.log(res));
-                    }
-                });
+                Comment_1.default.updateOne({ _id: commentId }, { $push: { reaction: { uid, type, displayName, photoURL } } }).then(() => res.send(true));
             }
         }
         catch (error) {

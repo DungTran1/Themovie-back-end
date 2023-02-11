@@ -43,9 +43,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express_1.default.urlencoded({ extended: true }));
-// app.use(bodyParser.urlencoded({
-//   extended: true
-// }));
 app.use(express_1.default.json());
 (0, routes_1.default)(app);
 const server = app.listen(process.env.PORT || 5000, () => {

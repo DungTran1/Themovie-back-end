@@ -24,71 +24,76 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Account_1 = __importDefault(require("../modal/Account"));
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const Comment_1 = __importDefault(require("../modal/Comment"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const LoginController = {
     Test: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const test = yield Account_1.default.findOne({
-            name: "DungTran",
-            email: "lssktt@gmail.com",
+        const test = yield Comment_1.default.deleteMany({
+            movieId: 76600,
         });
         return res.json(test);
     }),
-    generateAccessToken: (user) => {
-        return jsonwebtoken_1.default.sign({
-            id: user.id,
-        }, "secretAccessToken", { expiresIn: "30s" });
-    },
-    generateRefreshToken: (user) => {
-        return jsonwebtoken_1.default.sign({
-            id: user.id,
-        }, "secretRefreshToken", { expiresIn: "365d" });
-    },
-    RefreshToken: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const refreshToken = req.cookies.refreshToken;
-        console.log(refreshToken);
-        //Send error if token is not valid
-        if (!refreshToken)
-            return res.status(401).json("You're not authenticated");
-        jsonwebtoken_1.default.verify(refreshToken, "secretAccessToken", (err, user) => {
-            if (err) {
-                console.log(err);
-            }
-            //create new access token, refresh token and send to user
-            const newAccessToken = LoginController.generateAccessToken(user);
-            const newRefreshToken = LoginController.generateRefreshToken(user);
-            res.cookie("refreshToken", newRefreshToken, {
-                httpOnly: true,
-                secure: false,
-                sameSite: "strict",
-            });
-            res.status(200).json({
-                accessToken: newAccessToken,
-            });
-        });
-    }),
+    // generateAccessToken: (user: any) => {
+    //   return jwt.sign(
+    //     {
+    //       id: user.id,
+    //     },
+    //     "secretAccessToken",
+    //     { expiresIn: "30s" }
+    //   );
+    // },
+    // generateRefreshToken: (user: any) => {
+    //   return jwt.sign(
+    //     {
+    //       id: user.id,
+    //     },
+    //     "secretRefreshToken",
+    //     { expiresIn: "365d" }
+    //   );
+    // },
+    // RefreshToken: async (req: express.Request | any, res: express.Response) => {
+    //   const refreshToken = req.cookies.refreshToken;
+    //   console.log(refreshToken);
+    //   //Send error if token is not valid
+    //   if (!refreshToken) return res.status(401).json("You're not authenticated");
+    //   jwt.verify(refreshToken, "secretAccessToken", (err: any, user: any) => {
+    //     if (err) {
+    //       console.log(err);
+    //     }
+    //     //create new access token, refresh token and send to user
+    //     const newAccessToken = LoginController.generateAccessToken(user);
+    //     const newRefreshToken = LoginController.generateRefreshToken(user);
+    //     res.cookie("refreshToken", newRefreshToken, {
+    //       httpOnly: true,
+    //       secure: false,
+    //       sameSite: "strict",
+    //     });
+    //     res.status(200).json({
+    //       accessToken: newAccessToken,
+    //     });
+    //   });
+    // },
     LogIn: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const user = yield Account_1.default.findOne({ name: req.body.name });
+            const user = yield Account_1.default.findOne({ email: req.body.email });
             if (!user) {
-                res.status(404).json("wrong user!");
+                res.status(404).json("User is not exsist!");
             }
             const validPassword = yield bcrypt_1.default.compare(req.body.password, user.password);
             if (!validPassword) {
                 res.status(404).json("Wrong password");
             }
-            console.log(!!user, !!validPassword);
             if (user && validPassword) {
-                const accessToken = LoginController.generateAccessToken(user);
-                const refreshToken = LoginController.generateRefreshToken(user);
+                // const accessToken = LoginController.generateAccessToken(user);
+                // const refreshToken = LoginController.generateRefreshToken(user);
                 const _a = user._doc, { password } = _a, other = __rest(_a, ["password"]);
-                res.cookie("refreshToken", refreshToken, {
-                    httpOnly: true,
-                    secure: false,
-                    path: "/",
-                    sameSite: "strict",
-                });
-                res.status(200).json(Object.assign(Object.assign({}, other), { accessToken }));
+                // res.cookie("refreshToken", refreshToken, {
+                //   httpOnly: true,
+                //   secure: false,
+                //   path: "/",
+                //   sameSite: "strict",
+                // });
+                res.status(200).json(Object.assign({}, other));
             }
         }
         catch (error) {
@@ -98,37 +103,57 @@ const LoginController = {
     Register: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const data = req.body;
-            const check = yield Account_1.default.findOne({
-                $or: [{ name: data.name }, { email: data.email }],
+            const user = new Account_1.default({
+                uid: data.uid,
+                displayName: data.displayName,
+                photoUrl: data.photoUrl,
             });
+            yield user.save();
+            return res.send(true);
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }),
+    RegisterProvider: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const data = req.body;
+            const check = (yield Account_1.default.findOne({
+                email: data.email,
+            }));
             if (!check) {
-                const salt = yield bcrypt_1.default.genSalt(10);
-                const hash = yield bcrypt_1.default.hash(data.password, salt);
+                // const salt = await bycript.genSalt(10);
+                // const hash = await bycript.hash(data.password, salt);
                 const user = new Account_1.default({
-                    name: data.name,
-                    password: hash,
+                    uid: data.uid,
+                    firstname: data.firstName,
+                    password: data.password,
                     email: data.email,
                     photoUrl: data.photoUrl || "",
                 });
                 yield user.save();
-                const accessToken = LoginController.generateAccessToken(user._doc);
-                const refreshToken = LoginController.generateRefreshToken(user._doc);
+                // const accessToken = LoginController.generateAccessToken(user._doc);
+                // const refreshToken = LoginController.generateRefreshToken(user._doc);
                 const _b = user._doc, { password } = _b, others = __rest(_b, ["password"]);
-                res.cookie("refreshToken", refreshToken, {
-                    httpOnly: true,
-                    secure: false,
-                    path: "/",
-                    sameSite: "strict",
-                });
-                return res.send({ path: "/", user: Object.assign(Object.assign({}, others), { accessToken }) });
+                // res.cookie("refreshToken", refreshToken, {
+                //   httpOnly: true,
+                //   secure: false,
+                //   path: "/",
+                //   sameSite: "strict",
+                // });
+                return res.send(Object.assign({ isSignIn: true }, others));
             }
-            res.send({ path: "Tai khoan da ton tai" });
+            const _c = check._doc, { password } = _c, others = __rest(_c, ["password"]);
+            res.send(Object.assign({ isSignIn: true }, others));
         }
-        catch (error) { }
+        catch (error) {
+            console.log(error);
+            res.status(500).send(error);
+        }
     }),
-    LogOut: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        res.clearCookie("refreshToken");
-        res.status(200).json("Logged out successfully!");
-    }),
+    // LogOut: async (req: express.Request, res: express.Response) => {
+    //   res.clearCookie("refreshToken");
+    //   res.status(200).json("Logged out successfully!");
+    // },
 };
 exports.default = LoginController;

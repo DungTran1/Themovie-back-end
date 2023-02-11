@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const BookmarkController_1 = __importDefault(require("../controllers/BookmarkController"));
 const router = express_1.default.Router();
 router.post("/:id", BookmarkController_1.default.saveBookmark);
+router.post("/check/:id", BookmarkController_1.default.checkBookmark);
 router.post("/", BookmarkController_1.default.getBookmark);
 router.post("/delete/movie", BookmarkController_1.default.deleteBookmark);
 exports.default = router;

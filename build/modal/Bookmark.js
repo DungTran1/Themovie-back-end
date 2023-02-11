@@ -7,7 +7,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const Schema = mongoose_1.default.Schema;
 const BookmarkSchema = new Schema({
     movieIds: { type: Array, required: true },
-    userId: { type: String, required: true },
+    uid: { type: String, required: true },
 }, { timestamps: true });
 const Bookmark = mongoose_1.default.model("bookmarks", BookmarkSchema);
 exports.default = Bookmark;

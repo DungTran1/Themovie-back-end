@@ -7,10 +7,14 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const Schema = mongoose_1.default.Schema;
 const CommentSchema = new Schema({
     movieId: { type: Number, required: true },
-    userId: { type: String, required: true },
+    uid: { type: String, required: true },
+    displayName: { type: String, required: true },
+    photoURL: { type: String, default: "" },
     content: { type: String, default: "" },
-    reaction: { type: (Array), default: [] },
-    reply: { type: String, default: null },
+    comments: { type: String, default: null },
+    reaction: {
+        type: (Array),
+    },
 }, { timestamps: true });
 const Comment = mongoose_1.default.model("Comments", CommentSchema);
 exports.default = Comment;
