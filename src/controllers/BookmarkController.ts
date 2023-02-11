@@ -1,7 +1,7 @@
 import Bookmark from "../modal/Bookmark";
 import express from "express";
 const BookmarkController = {
-  saveBookmark: async (req: any, res: any) => {
+  saveBookmark: async (req: express.Request, res: express.Response) => {
     try {
       const movieId = Number(req.params.id);
       const media = req.body.media;
@@ -9,14 +9,14 @@ const BookmarkController = {
       const userWatched = await Bookmark.findOne({ uid });
       if (userWatched) {
         const isWatched = userWatched?.movieIds.some(
-          (movie: any) => movie.movieId === movieId
+          (movie) => movie.movieId === movieId
         );
         if (!isWatched) {
           return res.status(200).send("update nothing!");
         } else {
           await Bookmark.updateOne(
-            { uid: userWatched.uid },
-            { $push: { movieIds: { movieId, media } } }
+            { uid: uid },
+            { $pull: { movieIds: { movieId: movieId } } }
           );
           return res.status(200).send("update Bookmark successfully!");
         }

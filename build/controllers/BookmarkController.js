@@ -26,7 +26,7 @@ const BookmarkController = {
                     return res.status(200).send("update nothing!");
                 }
                 else {
-                    yield Bookmark_1.default.updateOne({ uid: userWatched.uid }, { $push: { movieIds: { movieId, media } } });
+                    yield Bookmark_1.default.updateOne({ uid: uid }, { $pull: { movieIds: { movieId: movieId } } });
                     return res.status(200).send("update Bookmark successfully!");
                 }
             }
