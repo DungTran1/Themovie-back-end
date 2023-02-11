@@ -11,7 +11,7 @@ const BookmarkController = {
         const isWatched = userWatched?.movieIds.some(
           (movie: any) => movie.movieId === movieId
         );
-        if (isWatched) {
+        if (!isWatched) {
           return res.status(200).send("update nothing!");
         } else {
           await Bookmark.updateOne(

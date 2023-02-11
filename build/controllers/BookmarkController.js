@@ -22,7 +22,7 @@ const BookmarkController = {
             const userWatched = yield Bookmark_1.default.findOne({ uid });
             if (userWatched) {
                 const isWatched = userWatched === null || userWatched === void 0 ? void 0 : userWatched.movieIds.some((movie) => movie.movieId === movieId);
-                if (isWatched) {
+                if (!isWatched) {
                     return res.status(200).send("update nothing!");
                 }
                 else {
