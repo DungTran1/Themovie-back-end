@@ -32,13 +32,12 @@ const CommentController = {
             });
             yield newComment.save();
             const findComemnt = yield Comment_1.default.findOne({}, {}, { sort: { createdAt: -1 } });
-            return res.json({
+            return res.send(200).json({
                 comment: findComemnt,
             });
         }
         catch (error) {
             console.log(error);
-            res.send(error);
         }
     }),
     getComment: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -62,7 +61,7 @@ const CommentController = {
                 content: req.body.content,
             });
             if (edit) {
-                res.send(true);
+                res.status(200).send(true);
             }
         }
         catch (error) { }
@@ -73,9 +72,9 @@ const CommentController = {
             const remove = yield Comment_1.default.findByIdAndDelete(_id);
             console.log(remove);
             if (remove) {
-                return res.send(true);
+                return res.status(200).send(true);
             }
-            return res.send(false);
+            return res.status(200).send(false);
         }
         catch (error) {
             console.log(error);
@@ -97,17 +96,17 @@ const CommentController = {
                 const typeReacted = react.reaction.find((e) => e.type === type && e.uid === uid);
                 if (typeReacted) {
                     Comment_1.default.updateOne({ _id: commentId }, { $pull: { reaction: { uid } } })
-                        .then(() => res.send(true))
+                        .then(() => res.status(200).send(true))
                         .catch((e) => console.log(e));
                 }
                 else {
                     Comment_1.default.updateOne({ _id: commentId, "reaction.uid": uid }, { $set: { "reaction.$.type": type } })
-                        .then(() => res.send(true))
+                        .then(() => res.status(200).send(true))
                         .catch((e) => console.log(e));
                 }
             }
             else {
-                Comment_1.default.updateOne({ _id: commentId }, { $push: { reaction: { uid, type, displayName, photoURL } } }).then(() => res.send(true));
+                Comment_1.default.updateOne({ _id: commentId }, { $push: { reaction: { uid, type, displayName, photoURL } } }).then(() => res.status(200).send(true));
             }
         }
         catch (error) {

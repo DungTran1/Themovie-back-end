@@ -1,7 +1,5 @@
 import History from "../modal/History";
 import express from "express";
-import jwt, { verify } from "jsonwebtoken";
-import bycript from "bcrypt";
 
 const HistoryController = {
   saveHistory: async (req: express.Request, res: express.Response) => {
@@ -33,7 +31,6 @@ const HistoryController = {
       }
     } catch (error) {
       console.log(error);
-      return res.status(400).send("add failed!");
     }
   },
   getHistory: async (req: any, res: any) => {

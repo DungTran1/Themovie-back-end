@@ -40,7 +40,6 @@ const HistoryController = {
         }
         catch (error) {
             console.log(error);
-            return res.status(400).send("add failed!");
         }
     }),
     getHistory: (req, res) => __awaiter(void 0, void 0, void 0, function* () {

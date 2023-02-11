@@ -39,12 +39,11 @@ const CommentController = {
         {},
         { sort: { createdAt: -1 } }
       );
-      return res.json({
+      return res.send(200).json({
         comment: findComemnt,
       });
     } catch (error) {
       console.log(error);
-      res.send(error);
     }
   },
 
@@ -68,7 +67,7 @@ const CommentController = {
         content: req.body.content,
       });
       if (edit) {
-        res.send(true);
+        res.status(200).send(true);
       }
     } catch (error) {}
   },
@@ -78,9 +77,9 @@ const CommentController = {
       const remove = await Comment.findByIdAndDelete(_id);
       console.log(remove);
       if (remove) {
-        return res.send(true);
+        return res.status(200).send(true);
       }
-      return res.send(false);
+      return res.status(200).send(false);
     } catch (error) {
       console.log(error);
     }
@@ -106,21 +105,21 @@ const CommentController = {
             { _id: commentId },
             { $pull: { reaction: { uid } } }
           )
-            .then(() => res.send(true))
+            .then(() => res.status(200).send(true))
             .catch((e) => console.log(e));
         } else {
           Comment.updateOne(
             { _id: commentId, "reaction.uid": uid },
             { $set: { "reaction.$.type": type } }
           )
-            .then(() => res.send(true))
+            .then(() => res.status(200).send(true))
             .catch((e) => console.log(e));
         }
       } else {
         Comment.updateOne(
           { _id: commentId },
           { $push: { reaction: { uid, type, displayName, photoURL } } }
-        ).then(() => res.send(true));
+        ).then(() => res.status(200).send(true));
       }
     } catch (error) {
       console.log(error);
