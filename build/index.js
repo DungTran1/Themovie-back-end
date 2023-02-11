@@ -45,6 +45,6 @@ app.use(cookieParser());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.json());
 (0, routes_1.default)(app);
-const server = app.listen(process.env.PORT || 5000, () => {
-    console.log("Start on " + process.env.PORT || 5000);
+const server = app.listen(5000, () => {
+    console.log("Start on " + 5000);
 });
