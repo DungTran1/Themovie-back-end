@@ -37,10 +37,9 @@ const app = (0, express_1.default)();
 const corsOptions = {
     origin: "https://themovie.onrender.com",
     optionsSuccessStatus: 200,
-    credentials: true,
 };
-(0, db_1.default)();
 app.use(cors(corsOptions));
+(0, db_1.default)();
 app.use(cookieParser());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.json());

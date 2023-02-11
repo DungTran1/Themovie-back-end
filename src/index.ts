@@ -10,10 +10,9 @@ const app: Application = express();
 const corsOptions = {
   origin: "https://themovie.onrender.com",
   optionsSuccessStatus: 200,
-  credentials: true,
 };
-connect();
 app.use(cors(corsOptions));
+connect();
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 

@@ -23,7 +23,7 @@ const HistoryController = {
             if (userWatched) {
                 const isWatched = userWatched === null || userWatched === void 0 ? void 0 : userWatched.movieIds.some((movie) => movie.movieId === movieId);
                 if (isWatched) {
-                    return res.status(200).send("update nothing!");
+                    return res.status(200).send("update history successfully!");
                 }
                 else {
                     yield History_1.default.updateOne({ uid: userWatched.uid }, { $push: { movieIds: { movieId, media } } });

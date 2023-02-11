@@ -13,7 +13,7 @@ const HistoryController = {
           (movie: any) => movie.movieId === movieId
         );
         if (isWatched) {
-          return res.status(200).send("update nothing!");
+          return res.status(200).send("update history successfully!");
         } else {
           await History.updateOne(
             { uid: userWatched.uid },
