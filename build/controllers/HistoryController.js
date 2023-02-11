@@ -37,6 +37,7 @@ const HistoryController = {
                 }).save();
                 return res.status(200).send("add into history successfully!");
             }
+            return;
         }
         catch (error) {
             console.log(error);
@@ -50,7 +51,10 @@ const HistoryController = {
                 uid,
             });
             const movieIds = movieWatched === null || movieWatched === void 0 ? void 0 : movieWatched.movieIds.filter((item) => item.media === media);
-            return res.status(200).json({ movieIds: movieIds });
+            if (movieIds) {
+                return res.status(200).json({ movieIds: movieIds });
+            }
+            return;
         }
         catch (error) {
             console.log(error);
@@ -63,11 +67,13 @@ const HistoryController = {
             const item = yield History_1.default.findOne({ uid });
             const newItem = item === null || item === void 0 ? void 0 : item.movieIds.filter((item) => !movieIds.includes(item.movieId));
             const removed = yield History_1.default.updateOne({ uid }, { movieIds: newItem });
-            return res.status(200).send("update history successfully!");
+            if (removed) {
+                return res.status(200).send("update history successfully!");
+            }
+            return;
         }
         catch (error) {
             console.log(error);
-            return res.status(200).json({ error });
         }
     }),
 };

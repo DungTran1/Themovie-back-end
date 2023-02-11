@@ -1,21 +1,6 @@
 import Comment from "../modal/Comment";
 import express from "express";
 
-interface IComment {
-  movieId: number;
-  uid: string;
-  content: string;
-  reaction: Array<object>;
-  reply: string;
-}
-interface IUser {
-  name: string;
-  password: string;
-  email: string;
-  address: string;
-  birthday: string;
-  photoUrl: string;
-}
 const CommentController = {
   addComment: async (req: express.Request, res: express.Response) => {
     try {
@@ -50,9 +35,9 @@ const CommentController = {
   getComment: async (req: express.Request, res: express.Response) => {
     try {
       const movieId = req.body.movieId;
-      const comment = (await Comment.find({ movieId }).sort({
+      const comment = await Comment.find({ movieId }).sort({
         createdAt: -1,
-      })) as any;
+      });
       if (JSON.stringify(comment) === "[]") {
         return res.status(200).json(null);
       }
@@ -75,7 +60,6 @@ const CommentController = {
     try {
       const _id = req.body._id;
       const remove = await Comment.findByIdAndDelete(_id);
-      console.log(remove);
       if (remove) {
         return res.status(200).send(true);
       }
@@ -91,14 +75,15 @@ const CommentController = {
       const displayName = req.body.displayName;
       const photoURL = req.body.photoURL;
       const type = req.body.type;
-      const react: IComment = (await Comment.findOne({
+      const react = (await Comment.findOne({
         _id: commentId,
       })) as any;
-      const userReacted = react.reaction.find((e: any) => e.uid === uid);
-      console.log(userReacted, type);
+
+      const userReacted = react?.reaction?.find((e: any) => e.uid === uid);
+
       if (userReacted) {
         const typeReacted = react.reaction.find(
-          (e: any) => e.type === type && e.uid === uid
+          (e: { type: string; uid: string }) => e.type === type && e.uid === uid
         );
         if (typeReacted) {
           Comment.updateOne(

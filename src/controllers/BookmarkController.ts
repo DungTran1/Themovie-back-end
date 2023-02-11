@@ -18,7 +18,7 @@ const BookmarkController = {
               $push: { movieIds: { movieId, media } },
             }
           );
-          return res.status(200).send("update nothing!");
+          return res.status(200).send("update Bookmark successfully!");
         } else {
           await Bookmark.updateOne(
             { uid: uid },
@@ -34,10 +34,9 @@ const BookmarkController = {
         }).save();
         return res.json("add into Bookmark successfully!");
       }
-      return res.status(200).send("add failed!");
+      return;
     } catch (error) {
       console.log(error);
-      return res.status(400).send(error);
     }
   },
   checkBookmark: async (req: express.Request, res: express.Response) => {
@@ -69,7 +68,10 @@ const BookmarkController = {
       const movieIds = movieWatched?.movieIds.filter(
         (item) => item.media === media
       );
-      return res.status(200).json({ movieIds: movieIds });
+      if (movieIds) {
+        return res.status(200).json({ movieIds: movieIds });
+      }
+      return;
     } catch (error) {
       console.log(error);
     }
@@ -91,10 +93,9 @@ const BookmarkController = {
       if (removed) {
         return res.status(200).send("update Bookmark successfully!");
       }
-      return res.status(200).send("failure");
+      return;
     } catch (error) {
       console.log(error);
-      return res.status(400).send(error);
     }
   },
 };

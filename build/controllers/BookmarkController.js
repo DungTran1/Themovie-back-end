@@ -26,7 +26,7 @@ const BookmarkController = {
                     yield Bookmark_1.default.updateOne({ uid }, {
                         $push: { movieIds: { movieId, media } },
                     });
-                    return res.status(200).send("update nothing!");
+                    return res.status(200).send("update Bookmark successfully!");
                 }
                 else {
                     yield Bookmark_1.default.updateOne({ uid: uid }, { $pull: { movieIds: { movieId: movieId } } });
@@ -40,11 +40,10 @@ const BookmarkController = {
                 }).save();
                 return res.json("add into Bookmark successfully!");
             }
-            return res.status(200).send("add failed!");
+            return;
         }
         catch (error) {
             console.log(error);
-            return res.status(400).send(error);
         }
     }),
     checkBookmark: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -73,7 +72,10 @@ const BookmarkController = {
                 uid,
             });
             const movieIds = movieWatched === null || movieWatched === void 0 ? void 0 : movieWatched.movieIds.filter((item) => item.media === media);
-            return res.status(200).json({ movieIds: movieIds });
+            if (movieIds) {
+                return res.status(200).json({ movieIds: movieIds });
+            }
+            return;
         }
         catch (error) {
             console.log(error);
@@ -89,11 +91,10 @@ const BookmarkController = {
             if (removed) {
                 return res.status(200).send("update Bookmark successfully!");
             }
-            return res.status(200).send("failure");
+            return;
         }
         catch (error) {
             console.log(error);
-            return res.status(400).send(error);
         }
     }),
 };

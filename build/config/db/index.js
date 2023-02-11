@@ -13,12 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
-const URL = "mongodb+srv://dungtran1:khongthe01@cluster0.f4prffj.mongodb.net/Movie?retryWrites=true&w=majority";
 function connect() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            console.log(typeof process.env.MONGO_URL);
-            yield mongoose_1.default.connect(URL);
+            yield mongoose_1.default.connect(process.env.MONGO_URL);
             console.log("successfully");
         }
         catch (error) {

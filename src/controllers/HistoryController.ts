@@ -29,6 +29,7 @@ const HistoryController = {
         }).save();
         return res.status(200).send("add into history successfully!");
       }
+      return;
     } catch (error) {
       console.log(error);
     }
@@ -43,8 +44,10 @@ const HistoryController = {
       const movieIds = movieWatched?.movieIds.filter(
         (item) => item.media === media
       );
-
-      return res.status(200).json({ movieIds: movieIds });
+      if (movieIds) {
+        return res.status(200).json({ movieIds: movieIds });
+      }
+      return;
     } catch (error) {
       console.log(error);
     }
@@ -60,11 +63,12 @@ const HistoryController = {
       );
 
       const removed = await History.updateOne({ uid }, { movieIds: newItem });
-
-      return res.status(200).send("update history successfully!");
+      if (removed) {
+        return res.status(200).send("update history successfully!");
+      }
+      return;
     } catch (error) {
       console.log(error);
-      return res.status(200).json({ error });
     }
   },
 };

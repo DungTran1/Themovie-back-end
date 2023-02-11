@@ -43,9 +43,9 @@ const CommentController = {
     getComment: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const movieId = req.body.movieId;
-            const comment = (yield Comment_1.default.find({ movieId }).sort({
+            const comment = yield Comment_1.default.find({ movieId }).sort({
                 createdAt: -1,
-            }));
+            });
             if (JSON.stringify(comment) === "[]") {
                 return res.status(200).json(null);
             }
@@ -70,7 +70,6 @@ const CommentController = {
         try {
             const _id = req.body._id;
             const remove = yield Comment_1.default.findByIdAndDelete(_id);
-            console.log(remove);
             if (remove) {
                 return res.status(200).send(true);
             }
@@ -81,6 +80,7 @@ const CommentController = {
         }
     }),
     saveReaction: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a;
         try {
             const uid = req.body.uid;
             const commentId = req.body.commentId;
@@ -90,8 +90,7 @@ const CommentController = {
             const react = (yield Comment_1.default.findOne({
                 _id: commentId,
             }));
-            const userReacted = react.reaction.find((e) => e.uid === uid);
-            console.log(userReacted, type);
+            const userReacted = (_a = react === null || react === void 0 ? void 0 : react.reaction) === null || _a === void 0 ? void 0 : _a.find((e) => e.uid === uid);
             if (userReacted) {
                 const typeReacted = react.reaction.find((e) => e.type === type && e.uid === uid);
                 if (typeReacted) {
