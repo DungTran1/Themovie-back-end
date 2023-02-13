@@ -80,32 +80,35 @@ const CommentController = {
       })) as any;
 
       const userReacted = react?.reaction?.find((e: any) => e.uid === uid);
-
-      if (userReacted) {
-        const typeReacted = react.reaction.find(
-          (e: { type: string; uid: string }) => e.type === type && e.uid === uid
-        );
-        if (typeReacted) {
-          Comment.updateOne(
-            { _id: commentId },
-            { $pull: { reaction: { uid } } }
-          )
-            .then(() => res.status(200).send(true))
-            .catch((e) => console.log(e));
+      if (uid) {
+        if (userReacted) {
+          const typeReacted = react.reaction.find(
+            (e: { type: string; uid: string }) =>
+              e.type === type && e.uid === uid
+          );
+          if (typeReacted) {
+            Comment.updateOne(
+              { _id: commentId },
+              { $pull: { reaction: { uid } } }
+            )
+              .then(() => res.status(200).send(true))
+              .catch((e) => console.log(e));
+          } else {
+            Comment.updateOne(
+              { _id: commentId, "reaction.uid": uid },
+              { $set: { "reaction.$.type": type } }
+            )
+              .then(() => res.status(200).send(true))
+              .catch((e) => console.log(e));
+          }
         } else {
           Comment.updateOne(
-            { _id: commentId, "reaction.uid": uid },
-            { $set: { "reaction.$.type": type } }
-          )
-            .then(() => res.status(200).send(true))
-            .catch((e) => console.log(e));
+            { _id: commentId },
+            { $push: { reaction: { uid, type, displayName, photoURL } } }
+          ).then(() => res.status(200).send(true));
         }
-      } else {
-        Comment.updateOne(
-          { _id: commentId },
-          { $push: { reaction: { uid, type, displayName, photoURL } } }
-        ).then(() => res.status(200).send(true));
       }
+      return;
     } catch (error) {
       console.log(error);
     }
