@@ -61,7 +61,7 @@ const CommentController = {
                 content: req.body.content,
             });
             if (edit) {
-                res.status(200).send(true);
+                return res.status(200).send(true);
             }
         }
         catch (error) { }
@@ -69,8 +69,10 @@ const CommentController = {
     removeComment: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const _id = req.body._id;
-            const remove = yield Comment_1.default.findByIdAndDelete(_id);
-            if (remove) {
+            const removeChild = yield Comment_1.default.deleteMany({
+                $or: [{ comments: _id }, { _id }],
+            });
+            if (removeChild) {
                 return res.status(200).send(true);
             }
             return res.status(200).send(false);

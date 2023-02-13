@@ -52,15 +52,17 @@ const CommentController = {
         content: req.body.content,
       });
       if (edit) {
-        res.status(200).send(true);
+        return res.status(200).send(true);
       }
     } catch (error) {}
   },
   removeComment: async (req: express.Request, res: express.Response) => {
     try {
       const _id = req.body._id;
-      const remove = await Comment.findByIdAndDelete(_id);
-      if (remove) {
+      const removeChild = await Comment.deleteMany({
+        $or: [{ comments: _id }, { _id }],
+      });
+      if (removeChild) {
         return res.status(200).send(true);
       }
       return res.status(200).send(false);
