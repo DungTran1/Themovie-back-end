@@ -108,7 +108,7 @@ const CommentController = {
           ).then(() => res.status(200).send(true));
         }
       }
-      return;
+      return res.status(200).send(null);
     } catch (error) {
       console.log(error);
     }

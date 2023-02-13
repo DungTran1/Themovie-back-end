@@ -91,22 +91,25 @@ const CommentController = {
                 _id: commentId,
             }));
             const userReacted = (_a = react === null || react === void 0 ? void 0 : react.reaction) === null || _a === void 0 ? void 0 : _a.find((e) => e.uid === uid);
-            if (userReacted) {
-                const typeReacted = react.reaction.find((e) => e.type === type && e.uid === uid);
-                if (typeReacted) {
-                    Comment_1.default.updateOne({ _id: commentId }, { $pull: { reaction: { uid } } })
-                        .then(() => res.status(200).send(true))
-                        .catch((e) => console.log(e));
+            if (uid) {
+                if (userReacted) {
+                    const typeReacted = react.reaction.find((e) => e.type === type && e.uid === uid);
+                    if (typeReacted) {
+                        Comment_1.default.updateOne({ _id: commentId }, { $pull: { reaction: { uid } } })
+                            .then(() => res.status(200).send(true))
+                            .catch((e) => console.log(e));
+                    }
+                    else {
+                        Comment_1.default.updateOne({ _id: commentId, "reaction.uid": uid }, { $set: { "reaction.$.type": type } })
+                            .then(() => res.status(200).send(true))
+                            .catch((e) => console.log(e));
+                    }
                 }
                 else {
-                    Comment_1.default.updateOne({ _id: commentId, "reaction.uid": uid }, { $set: { "reaction.$.type": type } })
-                        .then(() => res.status(200).send(true))
-                        .catch((e) => console.log(e));
+                    Comment_1.default.updateOne({ _id: commentId }, { $push: { reaction: { uid, type, displayName, photoURL } } }).then(() => res.status(200).send(true));
                 }
             }
-            else {
-                Comment_1.default.updateOne({ _id: commentId }, { $push: { reaction: { uid, type, displayName, photoURL } } }).then(() => res.status(200).send(true));
-            }
+            return res.status(200).send(null);
         }
         catch (error) {
             console.log(error);
