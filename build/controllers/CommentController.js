@@ -29,12 +29,8 @@ const CommentController = {
                 content,
                 comments,
                 photoURL,
-            });
-            yield newComment.save();
-            const findComemnt = yield Comment_1.default.findOne({}, {}, { sort: { createdAt: -1 } });
-            return res.send(200).json({
-                comment: findComemnt,
-            });
+            }).save();
+            return res.status(200).json(true);
         }
         catch (error) {
             console.log(error);
@@ -46,10 +42,9 @@ const CommentController = {
             const comment = yield Comment_1.default.find({ movieId }).sort({
                 createdAt: -1,
             });
-            if (JSON.stringify(comment) === "[]") {
-                return res.status(200).json(null);
+            if (JSON.stringify(comment) !== "[]") {
+                return res.status(200).json({ comment: comment });
             }
-            return res.status(200).json({ comment: comment });
         }
         catch (error) {
             console.log(error);
@@ -98,20 +93,19 @@ const CommentController = {
                     const typeReacted = react.reaction.find((e) => e.type === type && e.uid === uid);
                     if (typeReacted) {
                         Comment_1.default.updateOne({ _id: commentId }, { $pull: { reaction: { uid } } })
-                            .then(() => res.status(200).send(true))
+                            .then(() => res.status(200).json(true))
                             .catch((e) => console.log(e));
                     }
                     else {
                         Comment_1.default.updateOne({ _id: commentId, "reaction.uid": uid }, { $set: { "reaction.$.type": type } })
-                            .then(() => res.status(200).send(true))
+                            .then(() => res.status(200).json(true))
                             .catch((e) => console.log(e));
                     }
                 }
                 else {
-                    Comment_1.default.updateOne({ _id: commentId }, { $push: { reaction: { uid, type, displayName, photoURL } } }).then(() => res.status(200).send(true));
+                    Comment_1.default.updateOne({ _id: commentId }, { $push: { reaction: { uid, type, displayName, photoURL } } }).then(() => res.status(200).json(true));
                 }
             }
-            return res.status(200).send(null);
         }
         catch (error) {
             console.log(error);

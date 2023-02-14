@@ -20,7 +20,7 @@ const HistoryController = {
             const media = req.body.media;
             const uid = req.body.uid;
             const userWatched = yield History_1.default.findOne({ uid });
-            if (userWatched) {
+            if (userWatched && movieId && uid && media) {
                 const isWatched = userWatched === null || userWatched === void 0 ? void 0 : userWatched.movieIds.some((movie) => movie.movieId === movieId);
                 if (isWatched) {
                     return res.status(200).send("update history successfully!");
@@ -30,7 +30,7 @@ const HistoryController = {
                     return res.status(200).send("update history successfully!");
                 }
             }
-            if (!userWatched) {
+            if (!userWatched && movieId && uid && media) {
                 new History_1.default({
                     movieIds: [{ movieId, media }],
                     uid,

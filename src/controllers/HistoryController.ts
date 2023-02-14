@@ -8,7 +8,7 @@ const HistoryController = {
       const media: string = req.body.media;
       const uid: string = req.body.uid;
       const userWatched = await History.findOne({ uid });
-      if (userWatched) {
+      if (userWatched && movieId && uid && media) {
         const isWatched = userWatched?.movieIds.some(
           (movie: any) => movie.movieId === movieId
         );
@@ -22,7 +22,7 @@ const HistoryController = {
           return res.status(200).send("update history successfully!");
         }
       }
-      if (!userWatched) {
+      if (!userWatched && movieId && uid && media) {
         new History({
           movieIds: [{ movieId, media }],
           uid,
