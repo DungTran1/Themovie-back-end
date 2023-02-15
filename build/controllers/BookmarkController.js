@@ -25,22 +25,20 @@ const BookmarkController = {
                 if (!isWatched) {
                     yield Bookmark_1.default.updateOne({ uid }, {
                         $push: { movieIds: { movieId, media } },
-                    });
-                    return res.status(200).send("update Bookmark successfully!");
+                    }).then(() => res.status(200).send("add Bookmark successfully!"));
                 }
                 else {
-                    yield Bookmark_1.default.updateOne({ uid: uid }, { $pull: { movieIds: { movieId: movieId } } });
-                    return res.status(200).send("update Bookmark successfully!");
+                    yield Bookmark_1.default.updateOne({ uid: uid }, { $pull: { movieIds: { movieId: movieId } } }).then(() => res.status(200).send("remove Bookmark successfully!"));
                 }
             }
-            if (!userWatched) {
+            else {
                 new Bookmark_1.default({
                     movieIds: [{ movieId, media }],
                     uid,
-                }).save();
-                return res.json("add into Bookmark successfully!");
+                })
+                    .save()
+                    .then(() => res.status(200).send("add Bookmark successfully!"));
             }
-            return;
         }
         catch (error) {
             console.log(error);
@@ -56,9 +54,9 @@ const BookmarkController = {
             });
             const isCheck = (_a = bookmark === null || bookmark === void 0 ? void 0 : bookmark.movieIds) === null || _a === void 0 ? void 0 : _a.some((bookmark) => bookmark.movieId === movieId);
             if (isCheck) {
-                res.status(200).send(true);
+                return res.status(200).send(true);
             }
-            res.status(200).send(false);
+            return res.status(200).send(false);
         }
         catch (error) {
             console.log(error);
@@ -91,7 +89,6 @@ const BookmarkController = {
             if (removed) {
                 return res.status(200).send("update Bookmark successfully!");
             }
-            return;
         }
         catch (error) {
             console.log(error);

@@ -17,24 +17,21 @@ const BookmarkController = {
             {
               $push: { movieIds: { movieId, media } },
             }
-          );
-          return res.status(200).send("update Bookmark successfully!");
+          ).then(() => res.status(200).send("add Bookmark successfully!"));
         } else {
           await Bookmark.updateOne(
             { uid: uid },
             { $pull: { movieIds: { movieId: movieId } } }
-          );
-          return res.status(200).send("update Bookmark successfully!");
+          ).then(() => res.status(200).send("remove Bookmark successfully!"));
         }
-      }
-      if (!userWatched) {
+      } else {
         new Bookmark({
           movieIds: [{ movieId, media }],
           uid,
-        }).save();
-        return res.json("add into Bookmark successfully!");
+        })
+          .save()
+          .then(() => res.status(200).send("add Bookmark successfully!"));
       }
-      return;
     } catch (error) {
       console.log(error);
     }
@@ -51,9 +48,9 @@ const BookmarkController = {
         (bookmark: any) => bookmark.movieId === movieId
       );
       if (isCheck) {
-        res.status(200).send(true);
+        return res.status(200).send(true);
       }
-      res.status(200).send(false);
+      return res.status(200).send(false);
     } catch (error) {
       console.log(error);
     }
@@ -93,7 +90,6 @@ const BookmarkController = {
       if (removed) {
         return res.status(200).send("update Bookmark successfully!");
       }
-      return;
     } catch (error) {
       console.log(error);
     }
