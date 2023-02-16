@@ -9,6 +9,7 @@ var cors = require("cors");
 const app: Application = express();
 const corsOptions = {
   origin: process.env.PRODUCT_URL,
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
