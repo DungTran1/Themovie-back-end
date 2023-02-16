@@ -8,10 +8,10 @@ var cookieParser = require("cookie-parser");
 var cors = require("cors");
 const app: Application = express();
 const corsOptions = {
-  origin: process.env.PRODUCT_URL,
+  origin: "*",
   optionsSuccessStatus: 200,
 };
-app.use(cors());
+app.use(cors(corsOptions));
 connect();
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));

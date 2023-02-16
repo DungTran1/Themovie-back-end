@@ -35,10 +35,10 @@ var cookieParser = require("cookie-parser");
 var cors = require("cors");
 const app = (0, express_1.default)();
 const corsOptions = {
-    origin: process.env.PRODUCT_URL,
+    origin: "*",
     optionsSuccessStatus: 200,
 };
-app.use(cors());
+app.use(cors(corsOptions));
 (0, db_1.default)();
 app.use(cookieParser());
 app.use(express_1.default.urlencoded({ extended: true }));
