@@ -11,7 +11,7 @@ const corsOptions = {
   origin: process.env.PRODUCT_URL,
   optionsSuccessStatus: 200,
 };
-app.use(cors(corsOptions));
+app.use(cors());
 connect();
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));

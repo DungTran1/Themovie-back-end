@@ -38,7 +38,7 @@ const corsOptions = {
     origin: process.env.PRODUCT_URL,
     optionsSuccessStatus: 200,
 };
-app.use(cors(corsOptions));
+app.use(cors());
 (0, db_1.default)();
 app.use(cookieParser());
 app.use(express_1.default.urlencoded({ extended: true }));
