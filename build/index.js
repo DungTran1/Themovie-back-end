@@ -35,7 +35,7 @@ var cookieParser = require("cookie-parser");
 var cors = require("cors");
 const app = (0, express_1.default)();
 const corsOptions = {
-    origin: process.env.PRODUCT_URL,
+    origin: "https://themovie846343.netlify.app",
     optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
