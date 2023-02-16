@@ -34,6 +34,7 @@ dotenv.config();
 var cookieParser = require("cookie-parser");
 var cors = require("cors");
 const app = (0, express_1.default)();
+console.log(process.env.PRODUCT_URL);
 const corsOptions = {
     origin: process.env.PRODUCT_URL,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
