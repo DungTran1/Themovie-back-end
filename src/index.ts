@@ -8,7 +8,7 @@ var cookieParser = require("cookie-parser");
 var cors = require("cors");
 const app: Application = express();
 const corsOptions = {
-  origin: "https://themovie.onrender.com",
+  origin: process.env.PRODUCT_URL,
   optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
