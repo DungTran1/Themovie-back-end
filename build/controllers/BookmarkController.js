@@ -56,7 +56,9 @@ const BookmarkController = {
             if (isCheck) {
                 return res.status(200).send(true);
             }
-            return res.status(200).send(false);
+            else {
+                return res.status(200).send(false);
+            }
         }
         catch (error) {
             console.log(error);

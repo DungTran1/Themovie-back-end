@@ -23,11 +23,11 @@ const HistoryController = {
             if (userWatched && movieId && uid && media) {
                 const isWatched = userWatched === null || userWatched === void 0 ? void 0 : userWatched.movieIds.some((movie) => movie.movieId === movieId);
                 if (isWatched) {
-                    return res.status(200).send("update history successfully!");
+                    return res.status(200).json("update history successfully!");
                 }
                 else {
                     yield History_1.default.updateOne({ uid: userWatched.uid }, { $push: { movieIds: { movieId, media } } });
-                    return res.status(200).send("update history successfully!");
+                    return res.status(200).json("update history successfully!");
                 }
             }
             if (!userWatched && movieId && uid && media) {
@@ -35,9 +35,8 @@ const HistoryController = {
                     movieIds: [{ movieId, media }],
                     uid,
                 }).save();
-                return res.status(200).send("add into history successfully!");
+                return res.status(200).json("add into history successfully!");
             }
-            return;
         }
         catch (error) {
             console.log(error);
@@ -54,7 +53,6 @@ const HistoryController = {
             if (movieIds) {
                 return res.status(200).json({ movieIds: movieIds });
             }
-            return;
         }
         catch (error) {
             console.log(error);
@@ -70,7 +68,6 @@ const HistoryController = {
             if (removed) {
                 return res.status(200).send("update history successfully!");
             }
-            return;
         }
         catch (error) {
             console.log(error);

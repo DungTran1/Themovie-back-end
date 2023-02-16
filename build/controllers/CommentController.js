@@ -70,7 +70,6 @@ const CommentController = {
             if (removeChild) {
                 return res.status(200).send(true);
             }
-            return res.status(200).send(false);
         }
         catch (error) {
             console.log(error);
