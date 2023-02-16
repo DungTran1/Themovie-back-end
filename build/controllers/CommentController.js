@@ -50,6 +50,19 @@ const CommentController = {
             console.log(error);
         }
     }),
+    uploadImageComment: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const uid = req.body.uid;
+            const photoURL = req.body.photoURL;
+            const comment = yield Comment_1.default.updateMany({ uid }, { photoURL });
+            if (comment) {
+                return res.status(200).json(true);
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }),
     editComment: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const edit = yield Comment_1.default.findByIdAndUpdate(req.body._id, {
