@@ -7,16 +7,27 @@ dotenv.config();
 var cookieParser = require("cookie-parser");
 var cors = require("cors");
 const app: Application = express();
-const corsOptions = {
-  origin: process.env.PRODUCT_URL,
-  optionsSuccessStatus: 200,
-};
-app.use(cors());
+
 connect();
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET,POST,PUT,DELETE,OPTIONS,PATCH"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-Requested-With,Content-Type"
+  );
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+
+  next();
+});
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(express.json());
+
 appRoute(app);
 
 const server: Server = app.listen(process.env.PORT, () => {
