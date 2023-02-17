@@ -37,14 +37,22 @@ const CommentController = {
       console.log(error);
     }
   },
-  uploadImageComment: async (req: express.Request, res: express.Response) => {
+  uploadProfileComment: async (req: express.Request, res: express.Response) => {
     try {
       const uid = req.body.uid;
       const photoURL = req.body.photoURL;
-
-      const comment = await Comment.updateMany({ uid }, { photoURL });
-      if (comment) {
-        return res.status(200).json(true);
+      const displayName = req.body.displayName;
+      if (photoURL) {
+        const comment = await Comment.updateMany({ uid }, { photoURL });
+        if (comment) {
+          return res.status(200).json(true);
+        }
+      }
+      if (displayName) {
+        const comment = await Comment.updateMany({ uid }, { displayName });
+        if (comment) {
+          return res.status(200).json(true);
+        }
       }
     } catch (error) {
       console.log(error);

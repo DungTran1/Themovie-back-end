@@ -50,13 +50,22 @@ const CommentController = {
             console.log(error);
         }
     }),
-    uploadImageComment: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    uploadProfileComment: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const uid = req.body.uid;
             const photoURL = req.body.photoURL;
-            const comment = yield Comment_1.default.updateMany({ uid }, { photoURL });
-            if (comment) {
-                return res.status(200).json(true);
+            const displayName = req.body.displayName;
+            if (photoURL) {
+                const comment = yield Comment_1.default.updateMany({ uid }, { photoURL });
+                if (comment) {
+                    return res.status(200).json(true);
+                }
+            }
+            if (displayName) {
+                const comment = yield Comment_1.default.updateMany({ uid }, { displayName });
+                if (comment) {
+                    return res.status(200).json(true);
+                }
             }
         }
         catch (error) {

@@ -11,5 +11,5 @@ router.post("/add/:id", CommentController_1.default.addComment);
 router.post("/reaction/:id", CommentController_1.default.saveReaction);
 router.post("/edit", CommentController_1.default.editComment);
 router.post("/remove", CommentController_1.default.removeComment);
-router.post("/uploadImageComment", CommentController_1.default.uploadImageComment);
+router.post("/uploadProfileComment", CommentController_1.default.uploadProfileComment);
 exports.default = router;
