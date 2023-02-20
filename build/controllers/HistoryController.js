@@ -50,9 +50,7 @@ const HistoryController = {
                 uid,
             });
             const movieIds = movieWatched === null || movieWatched === void 0 ? void 0 : movieWatched.movieIds.filter((item) => item.media === media);
-            if (movieIds) {
-                return res.status(200).json({ movieIds: movieIds });
-            }
+            return res.status(200).json({ movieIds: movieIds });
         }
         catch (error) {
             console.log(error);

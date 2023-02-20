@@ -42,9 +42,7 @@ const CommentController = {
             const comment = yield Comment_1.default.find({ movieId }).sort({
                 createdAt: -1,
             });
-            if (JSON.stringify(comment) !== "[]") {
-                return res.status(200).json({ comment: comment });
-            }
+            return res.status(200).json({ comment: comment });
         }
         catch (error) {
             console.log(error);
